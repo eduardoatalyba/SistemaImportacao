@@ -3,40 +3,55 @@
     <!-- Sidebar -->
     <div :class="['sidebar', { collapsed, active: sidebarVisible }]">
       <!-- Avatar -->
-      <div class="avatar" @click="toggleSidebar">
-        <img src="https://i.pravatar.cc/100" alt="User" />
-        <span v-if="!collapsed">Olá, Usuário</span>
+      <div class="avatar d-flex align-items-center cursor-pointer" @click="toggleSidebar">
+        <img src="https://i.pravatar.cc/100" alt="User" class="rounded-circle" width="40" height="40" />
+        <span v-if="!collapsed" class="ms-2">Olá, Usuário</span>
       </div>
 
       <!-- Navegação -->
-      <ul class="menu">
-
-        <li @click="$router.push('/register')">
-          <span class="icon">📋</span>
-          <span v-if="!collapsed">Cadastro Usuários</span>
+      <ul class="nav flex-column">
+        <li class="nav-item" @click="$router.push('/register')">
+          <a class="nav-link d-flex align-items-center">
+            <span class="icon">📋</span>
+            <span v-if="!collapsed" class="ms-2">Cadastro Usuários</span>
+          </a>
         </li>
 
-        <li @click="$router.push('/admin/registerOrganization')">
-          <span class="icon">📁</span>
-          <span v-if="!collapsed">Cadastros Organização</span>
+        <li class="nav-item" @click="$router.push('/admin/registerOrganization')">
+          <a class="nav-link d-flex align-items-center">
+            <span class="icon">📁</span>
+            <span v-if="!collapsed" class="ms-2">Cadastros Organização</span>
+          </a>
         </li>
 
-        <li @click="$router.push('/admin/users')">
-          <span class="icon">📋</span>
-          <span v-if="!collapsed">Usuários</span>
+        <!-- Submenu -->
+        <li class="nav-item">
+          <a class="nav-link d-flex align-items-center" @click="toggleSubmenu">
+            <span class="icon">📋</span>
+            <span v-if="!collapsed" class="ms-2">Usuários</span>
+          </a>
+          <ul v-show="submenuVisible" class="nav flex-column ms-3">
+            <li class="nav-item">
+              <a class="nav-link" @click="$router.push('/admin/users')">Usuários Cadastrados</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" @click="alert('Em construção')">Adicionar Usuário</a>
+            </li>
+          </ul>
         </li>
 
-        <li @click="alert('construcao')">
-          <span class="icon">⚙️</span>
-          <span v-if="!collapsed">Configurações</span>
+        <li class="nav-item" @click="alert('Em construção')">
+          <a class="nav-link d-flex align-items-center">
+            <span class="icon">⚙️</span>
+            <span v-if="!collapsed" class="ms-2">Configurações</span>
+          </a>
         </li>
-
       </ul>
 
       <!-- Logout -->
-      <div class="logout" @click="logout">
+      <div class="logout d-flex align-items-center cursor-pointer" @click="logout">
         <span class="icon">🚪</span>
-        <span v-if="!collapsed">Sair</span>
+        <span v-if="!collapsed" class="ms-2">Sair</span>
       </div>
     </div>
 
@@ -53,13 +68,17 @@ export default {
   data() {
     return {
       collapsed: false,
-      sidebarVisible: false
+      sidebarVisible: false,
+      submenuVisible: false
     };
   },
   methods: {
     toggleSidebar() {
       this.collapsed = !this.collapsed;
       this.sidebarVisible = !this.sidebarVisible;
+    },
+    toggleSubmenu() {
+      this.submenuVisible = !this.submenuVisible;
     },
     logout() {
       alert("Logout feito! (ainda não conectado a backend)");
@@ -71,7 +90,6 @@ export default {
 </script>
 
 <style scoped>
-
 .main-layout {
   display: flex;
   height: 100vh;
@@ -79,26 +97,7 @@ export default {
   overflow: hidden;
 }
 
-.public-layout {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #f5f5f5;
-  padding: 20px;
-}
-
-
-/* Garante 100% da altura e largura */
-.container {
-  display: flex;
-  height: 100vh;
-  width: 100%;
-  font-family: 'Segoe UI', sans-serif;
-  overflow: hidden;
-}
-
-/* Sidebar padrão */
+/* Sidebar */
 .sidebar {
   background-color: #2c3e50;
   color: white;
@@ -107,66 +106,50 @@ export default {
   transition: width 0.3s ease, transform 0.3s ease;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 }
 
-
-/* Sidebar colapsada (desktop) */
 .sidebar.collapsed {
   width: 80px;
 }
 
-/* Avatar */
 .avatar {
-  display: flex;
-  align-items: center;
   cursor: pointer;
   margin-bottom: 30px;
 }
-.avatar img {
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  margin-right: 10px;
-}
-.avatar span {
-  font-weight: bold;
-}
 
-/* Menu */
 .menu {
   list-style: none;
   padding: 0;
   margin: 0;
 }
-.menu li {
+
+.nav-item {
+  margin-bottom: 15px;
+}
+
+.nav-link {
+  color: white;
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
-  cursor: pointer;
-  transition: 0.3s;
+  font-size: 16px;
 }
-.menu li:hover {
+
+.nav-link:hover {
   color: #1abc9c;
 }
 
-/* Icones */
 .icon {
   width: 30px;
   text-align: center;
   font-size: 18px;
 }
 
-/* Logout */
 .logout {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
+  margin-top: auto;
   color: #e74c3c;
   font-weight: bold;
-  margin-top: 20px;
-  transition: 0.3s;
 }
+
 .logout:hover {
   color: #ff7660;
 }
